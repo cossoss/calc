@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>症状性重度IVBS患者缺血复发风险预测</title>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+
+  <!-- <script src="./vue.js"></script> -->
+  <!-- <link rel="stylesheet" href="./index.css"> -->
+  <style>
+    .li {
+      display: flex;
+      justify-content: flex-start;
+      margin: 20px 0px;
+    }
+
+    .title {
+      height: 40px;
+      line-height: 40px;
+    }
+
+    .el-radio {
+      margin-right: 10px;
+    }
+
+    .el-row {
+      margin-bottom: 20px;
+    }
+
+    .el-col {
+      border-radius: 4px;
+    }
+
+    .bg-purple-dark {
+      background: #99a9bf;
+    }
+
+    .bg-purple {
+      background: #d3dce6;
+    }
+
+    .bg-purple-light {
+      background: #e5e9f2;
+    }
+
+    .grid-content {
+      border-radius: 4px;
+      min-height: 36px;
+    }
+
+    .row-bg {
+      padding: 10px 0;
+      background-color: #33ccff;
+    }
+
+    .image-bg {
+      background-image: url("./bg3.jpg");
+      background-repeat: repeat;
+      background-position: 0px, 0px;
+      background-size: cover;
+    }
+
+    .el-card__header2 {
+      padding: 0px 20px;
+      border-bottom: 1px solid #3f4960;
+      box-sizing: border-box
+    }
+
+    .el-card__tips {
+      padding: 0px 0;
+      box-sizing: border-box;
+      font-size: small;
+      color: #666;
+    }
+
+    .el-card__body {
+      padding-top: 0;
+    }
+  </style>
+</head>
+
+<body class="bg-purple-light image-bg">
+  <div class="el-row">
+    <div class="el-col-24"></div>
+  </div>
+  <div class="el-row">
+    <div class="el-col-10 el-col-push-3" style="min-width:600px;">
+      <div class="el-card box-card is-always-shadow">
+        <div class="el-card__header2">
+          <div class="clearfix"><span>
+              <div class="li">
+                <div class="el-col-24">
+                  <h2 class="el-col-push-2 el-page-header" style="color: #409EFF;">症状性重度IVBS患者缺血复发风险预测</h4>
+                </div>
+              </div>
+            </span></div>
+        </div>
+        <div class="el-card__body">
+          <div id="app">
+            <div class="content element-doc content">
+              <div class="li">
+                <div class="el-card__tips">
+                  <div class="el-col-24">
+                    <p>该网页用于计算症状性重度IVBS患者缺血风险早期复发概率</p>
+                    <p>空腹血糖 1mmol/L≈18mg/dL</p>
+                    <p>低密度脂蛋白 1mmol/L≈38.66mg/dL</p>
+                    <p>英文缩写：</p>
+                    <p>IVBS：颅内椎-基底动脉狭窄；NIHSS：美国国立卫生研究院卒中量表</p>
+                  </div>
+                </div>
+              </div>
+              <div class="li">
+                <div class="title">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp侧支代偿：</div>
+                <div class="title" style="margin-left:10px">
+                  <input class="el-radio" type="radio" id="good" value=0 v-model="bc" label="">
+                  <label for="good">好</label>
+                  <input class="el-radio" type="radio" id="bad" value=1 v-model="bc">
+                  <label for="bad">差</label>
+                </div>
+              </div>
+              <div class="li">
+                <div class="title">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp空腹血糖：</div>
+                <div>
+                  <input class="el-input__inner" v-model="fbg" placeholder="空腹血糖，默认mg/dL">
+                </div>
+                <div class="title" style="margin-left:10px">
+                  <input class="el-radio" type="radio" id="fbg_mg" value=1 v-model="fbg_unit">
+                  <label for="fbg_mg">mg/dL</label>
+                  <input class="el-radio" type="radio" id="fbg_mmol" value=18 v-model="fbg_unit">
+                  <label for="fbg_mmol">mmol/L</label>
+                </div>
+              </div>
+              <div class="li">
+                <div class="title"> &nbsp&nbsp&nbsp&nbsp低密度脂蛋白：</div>
+                <div>
+                  <input class="el-input__inner" v-model="ldl" placeholder="低密度脂蛋白，默认mg/dL">
+                </div>
+                <div class="title" style="margin-left:10px">
+                  <input class="el-radio" type="radio" id="ldl_mg" value=1 v-model="ldl_unit">
+                  <label for="ldl_mg">mg/dL</label>
+                  <input class="el-radio" type="radio" id="ldl_mmol" value=38.66 v-model="ldl_unit">
+                  <label for="ldl_mmol">mmol/L</label>
+                </div>
+              </div>
+              <div class="li">
+                <div class="title">初始NIHSS评分：</div>
+                <div>
+                  <input v-model="niss" class="el-input__inner" placeholder="初始NISS评分0-8">
+                </div>
+              </div>
+              <div class="li">
+                <div class="title" style="margin-left: 200px;"></div>
+                <button
+                  @click="p0 = Math.round(10000*1/(1+Math.exp(-1.867*bc-0.373*niss-0.016*fbg*fbg_unit-0.02*ldl*ldl_unit+7.641)))/100 + '%'"
+                  type="success" class="el-button el-button--primary is-plain">计算结果</button>
+              </div>
+              <div>
+              </div>
+              <div class="el-card__header2">
+
+                <!-- <p>侧支代偿: {{ bc==0?"好":"差" }}</p>
+                <p>空腹血糖： {{ fbg*fbg_unit}} mg/dL</p>
+                <p>低密度脂蛋白： {{ ldl*ldl_unit}} mg/dL</p>
+                <p>初始NISS评分：{{niss}}</p> -->
+              </div>
+              <div class="li">
+                <div class="title">&nbsp&nbsp&nbsp&nbsp早期复发概率：</div>
+                <div>
+                  <div class="title el-input__inner" :disabled="true" style="min-width: 150px;">{{p0}}</div>
+                </div>
+              </div>
+              <div class="li">
+                <div class="el-card__tips">
+                  风险提示：本网页预测平台仅为临床参考，不能替代医师诊断，最终决定由临床医生和患者根据实际情况审慎思考后作出
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="el-col-12"></div>
+  </div>
+  <div class="el-row">
+    <div class="el-col-24"></div>
+  </div>
+</body>
+<script>
+  const app = {
+    data() {
+      return {
+        bc: 0,
+        fbg: '',
+        fbg_unit: 1,
+        ldl: '',
+        ldl_unit: 1,
+        niss: 0,
+        p0: 0
+      }
+    }
+  }
+  Vue.createApp(app).mount('#app')
+</script>
+
+</html>
