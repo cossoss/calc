@@ -13,7 +13,7 @@ assert(html.includes(expectedHtmlFormula), 'docs/index.html must use the revised
 assert(readme.includes(expectedReadmeFormula), 'README.md must document the revised model formula');
 assert(!html.includes('-1.851*bc-0.358*niss-0.017*fbg*fbg_unit-0.021*ldl*ldl_unit+7.875'), 'docs/index.html must not keep the old formula');
 assert(!readme.includes('-1.851*X侧枝-0.358*XNISS-0.017*FBG-0.021*LDL+7.875'), 'README.md must not keep the old formula');
-assert(html.includes('风险提示：本网页预测平台仅为临床参考，不能替代医师诊断，最终决定由临床医生和患者根据实际情况审慎思考后作出'), 'docs/index.html must show the revised risk notice');
+assert(html.includes('风险提示：本预测平台仅为临床参考，不能替代医师诊断，最终决定由临床医生和患者根据实际情况审慎思考后作出'), 'docs/index.html must show the revised risk notice');
 
 function predict({ bc, niss, fbg, fbgUnit = 1, ldl, ldlUnit = 1 }) {
   return 1 / (1 + Math.exp(-1.867 * bc - 0.373 * niss - 0.016 * fbg * fbgUnit - 0.02 * ldl * ldlUnit + 7.641));
